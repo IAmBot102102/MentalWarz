@@ -1,0 +1,5 @@
+Here is the functionality of the game that is confirmed.
+This is going to be a platformer game, like Big Tower Tiny Square.
+Instead of scrolling through as you go, it is going to be one screen and then you will move to the next screen, (The first type is too big brain).
+The sprites will be boxes and divs, the style will be simple.
+We need to keep everything at 620px width, 480px height.
