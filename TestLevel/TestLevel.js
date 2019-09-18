@@ -14,6 +14,23 @@ const speedIncrement = 0.8;
 const jumpSpeed = 20;
 let onGround = true;
 
+
+
+function CheckCollision(PlayerX, PlayerY, PlayerSizeX, PlayerSizeY, ObstacleX, ObstacleY, ObstacleSizeX, ObstacleSizeY){
+  for(ex = ObstacleX; ex < ObstacleX + 1 + ObstacleSizeX; ex++){
+    for(ey = ObstacleY; ey < ObstacleY + 1 + ObstacleSizeY; ey++){
+      if(ex <= PlayerX + PlayerSizeX && ex >= PlayerX){
+        if(ey <= PlayerY + PlayerSizeY && ey >= PlayerY){
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+
+
 $("body").keydown(function(event) {
  if (event.keyCode === 37) {
    directions.left = true;
@@ -24,7 +41,7 @@ $("body").keydown(function(event) {
  if (event.keyCode === 38) {
    directions.up = true;
  }
- //   console.log(event.keyCode);
+ console.log(event.keyCode);
 });
 
 $("body").keyup(function(event) {
@@ -38,7 +55,7 @@ $("body").keyup(function(event) {
    directions.up = false;
  }
  //
- // console.log(event.keyCode);
+console.log(event.keyCode);
 });
 
 function render() {
