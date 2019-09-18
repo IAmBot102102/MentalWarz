@@ -2,7 +2,7 @@
 // let c = canvas.getContext("2d");
 let canvas = $("#gameScreen");
 const canvasBounds = { bottom: 500, top: 0, left: 0, right: 750 };
-const player = { height: 40, width: 40 };
+const player = { height: 20, width: 20 };
 let playerPos = { x: 40, y: 480 };
 let playerSpeed = { x: 0, y: 0 };
 const friction = 0.89;
@@ -118,6 +118,7 @@ function render() {
    width: player.width,
    height: player.height
  });
+ CheckCollision(playerPos.x, playerPos.y, player.width, player.height, 9,9,5,4);
 }
 
 var interval = setInterval(render, 10);
