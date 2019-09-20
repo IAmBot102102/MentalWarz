@@ -70,9 +70,15 @@ function render() {
 	canvas.clearCanvas();
 
 	if (directions.left) {
+		if(CheckCollision(player.x, player.y, player.width, player.height, obstacles[0].x, obstacles[0].y, obstacles[0].width, obstacles[0].height) == true){
+			player.vx = speed;
+		}
 		player.vx > -1 * speed ? (player.vx -= speedIncrement) : (player.vx = -1 * speed);
 	}
 	if (directions.right) {
+		if(CheckCollision(player.x, player.y, player.width, player.height, obstacles[0].x, obstacles[0].y, obstacles[0].width, obstacles[0].height) == true){
+			player.vx = -1 * speed;
+		}
 		player.vx < speed ? (player.vx += speedIncrement) : (player.vx = speed);
 	}
 	if (onGround && directions.up) player.vy = -1 * jumpSpeed;
@@ -110,7 +116,7 @@ function render() {
 	if (player.vx > (-10 ^ -4) && player.vx < 0) {
 		player.vx = 0;
 	}
-
+	
 	canvas.drawRect({
 		fillStyle: '#000',
 		x: player.x,
