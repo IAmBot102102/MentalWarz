@@ -1,9 +1,23 @@
-h1{
-    color: black;
+@import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
+h1 {
+  color: black;
 }
-body{
-    text-align: center;
+
+body {
+  text-align: center;
+  font-family: Roboto;
+  font-weight: bolder;
 }
-canvas{
-    border: 3px solid black;
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, calc(-50% - 60px));
+          transform: translate(-50%, calc(-50% - 60px));
 }
+
+.center canvas {
+  border: 3px solid black;
+}
+/*# sourceMappingURL=TestLevel.css.map */
