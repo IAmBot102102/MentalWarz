@@ -3,6 +3,7 @@
 let canvas = $('#gameScreen');
 const canvasBounds = { bottom: 500, top: 0, left: 0, right: 750 };
 const player = { height: 30, width: 30, x: 40, y: 480, vx: 0, vy: 0 };
+let _player = { height: 30, width: 30, x: 40, y: 480, vx: 0, vy: 0 };
 let obstacles = [];
 const friction = 0.75;
 const airfriction = 0.95;
@@ -16,28 +17,6 @@ let onGround = true;
 function createObstacle(height, width, x, y, color) {
 	obstacles.push({ height: height, width: width, x: x, y: y, color: color });
 }
-
-// function CheckCollision(
-// 	PlayerX,
-// 	PlayerY,
-// 	PlayerSizeX,
-// 	PlayerSizeY,
-// 	ObstacleX,
-// 	ObstacleY,
-// 	ObstacleSizeX,
-// 	ObstacleSizeY
-// ) {
-// 	for (ex = ObstacleX; ex < ObstacleX + 1 + ObstacleSizeX; ex++) {
-// 		for (ey = ObstacleY; ey < ObstacleY + 1 + ObstacleSizeY; ey++) {
-// 			if (ex <= PlayerX + PlayerSizeX && ex >= PlayerX) {
-// 				if (ey <= PlayerY + PlayerSizeY && ey >= PlayerY) {
-// 					return true;
-// 				}
-// 			}
-// 		}
-// 	}
-// 	return false;
-// }
 
 function checkCollision(player, object) {
 	if (
@@ -91,38 +70,32 @@ function render() {
 	player.vy += gravity;
 	player.x += player.vx;
 	player.y += player.vy;
-	console.log(player.y + ' ' + player.vy);
+
+	// console.log(player.y + ' ' + player.vy);
 
 	onGround = false;
 
 	for (var i = 0; i < obstacles.length; i++) {
-		// if (player.vx < 0) {
-		// 	if (
-		// 		CheckCollision(
-		// 			player.x,
-		// 			player.y,
-		// 			player.width,
-		// 			player.height,
-		// 			obstacles[i].x,
-		// 			obstacles[i].y,
-		// 			obstacles[i].width,
-		// 			obstacles[i].height
-		// 		) == true
-		// 	) {
-		// 		player.vx = 0;
-		// 		player.x = obstacles[i].x + obstacles[i].width / 2 + player.width / 2;
-		// 	}
-		// }
-		if (player.vy > 0 && checkCollision(player, obstacles[i]) == true && player.y - obstacles[i].y < player.vy) {
-			player.vy = 0;
-			player.y = obstacles[i].y - player.height;
-			onGround = true;
-		} else if (player.vx < 0 && checkCollision(player, obstacles[i]) == true) {
-			player.vx = 0;
-			player.x = obstacles[i].x + obstacles[i].width;
-		} else if (player.vx > 0 && checkCollision(player, obstacles[i]) == true) {
-			player.vx = 0;
-			player.x = obstacles[i].x - player.width;
+		if (checkCollision(player, obstacles[i]) == true) {
+			console.log(player.y + ' ' + _player.y + ' ' + obstacles[i].y);
+			if (player.vy > 0 && _player.y <= obstacles[i].y - player.height && player.y - obstacles[i].y < player.vy) {
+				player.vy = 0;
+				player.y = obstacles[i].y - player.height;
+				onGround = true;
+			} else if (
+				player.vy < 0 &&
+				_player.y >= obstacles[i].y + obstacles[i].height &&
+				obstacles[i].y + obstacles[i].height - player.y > player.vy
+			) {
+				player.vy = 0;
+				player.y = obstacles[i].y + obstacles[i].height;
+			} else if (player.vx < 0) {
+				player.vx = 0;
+				player.x = obstacles[i].x + obstacles[i].width;
+			} else if (player.vx > 0) {
+				player.vx = 0;
+				player.x = obstacles[i].x - player.width;
+			}
 		}
 	}
 
@@ -131,8 +104,8 @@ function render() {
 		player.vy = 0;
 		onGround = true;
 	}
-	if (player.y < canvasBounds.top + player.height) {
-		player.y = canvasBounds.top + player.height;
+	if (player.y < canvasBounds.top) {
+		player.y = canvasBounds.top;
 		player.vy = 0;
 	}
 	if (player.x > canvasBounds.right - player.height) {
@@ -174,9 +147,14 @@ function render() {
 			fromCenter: false
 		});
 	}
+
+	_player = Object.assign({}, player);
 }
 
 createObstacle(100, 70, 400, 400, '#000');
 createObstacle(200, 150, 600, 300, '#000');
+createObstacle(25, 100, 0, 375, '#000');
+createObstacle(25, 100, 175, 245, '#000');
+createObstacle(25, 100, 0, 115, '#000');
 
 var interval = setInterval(render, 16.66);
