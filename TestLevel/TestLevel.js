@@ -2,7 +2,7 @@
 // let c = canvas.getContext("2d");
 let canvas = $('#gameScreen');
 const canvasBounds = { bottom: 500, top: 0, left: 0, right: 750 };
-const player = { height: 30, width: 30, x: 40, y: 480, vx: 0, vy: 0 };
+let player = { height: 30, width: 30, x: 40, y: 480, vx: 0, vy: 0 };
 let _player = { height: 30, width: 30, x: 40, y: 480, vx: 0, vy: 0 };
 let obstacles = [];
 const friction = 0.75;
@@ -14,8 +14,8 @@ const speedIncrement = 1.2;
 const jumpSpeed = 20;
 let onGround = true;
 
-function createObstacle(height, width, x, y, color) {
-	obstacles.push({ height: height, width: width, x: x, y: y, color: color });
+function createObstacle(height, width, x, y, color, reset) {
+	obstacles.push({ height: height, width: width, x: x, y: y, color: color, reset: reset });
 }
 
 function checkCollision(player, object) {
@@ -77,8 +77,13 @@ function render() {
 
 	for (var i = 0; i < obstacles.length; i++) {
 		if (checkCollision(player, obstacles[i]) == true) {
-			console.log(player.y + ' ' + _player.y + ' ' + obstacles[i].y);
-			if (player.vy > 0 && _player.y <= obstacles[i].y - player.height && player.y - obstacles[i].y < player.vy) {
+			if (obstacles[i].reset) {
+				player = Object.assign({}, obstacles[i].reset);
+			} else if (
+				player.vy > 0 &&
+				_player.y <= obstacles[i].y - player.height &&
+				player.y - obstacles[i].y < player.vy
+			) {
 				player.vy = 0;
 				player.y = obstacles[i].y - player.height;
 				onGround = true;
@@ -156,5 +161,6 @@ createObstacle(200, 150, 600, 300, '#000');
 createObstacle(25, 100, 0, 375, '#000');
 createObstacle(25, 100, 175, 245, '#000');
 createObstacle(25, 100, 0, 115, '#000');
+createObstacle(25, 130, 470, 490, '#EF4747', { height: 30, width: 30, x: 40, y: 480, vx: 0, vy: 0 });
 
 var interval = setInterval(render, 16.66);
