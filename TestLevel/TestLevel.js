@@ -17,26 +17,37 @@ function createObstacle(height, width, x, y, color) {
 	obstacles.push({ height: height, width: width, x: x, y: y, color: color });
 }
 
-function CheckCollision(
-	PlayerX,
-	PlayerY,
-	PlayerSizeX,
-	PlayerSizeY,
-	ObstacleX,
-	ObstacleY,
-	ObstacleSizeX,
-	ObstacleSizeY
-) {
-	for (ex = ObstacleX; ex < ObstacleX + 1 + ObstacleSizeX; ex++) {
-		for (ey = ObstacleY; ey < ObstacleY + 1 + ObstacleSizeY; ey++) {
-			if (ex <= PlayerX + PlayerSizeX && ex >= PlayerX) {
-				if (ey <= PlayerY + PlayerSizeY && ey >= PlayerY) {
-					return true;
-				}
-			}
-		}
-	}
-	return false;
+// function CheckCollision(
+// 	PlayerX,
+// 	PlayerY,
+// 	PlayerSizeX,
+// 	PlayerSizeY,
+// 	ObstacleX,
+// 	ObstacleY,
+// 	ObstacleSizeX,
+// 	ObstacleSizeY
+// ) {
+// 	for (ex = ObstacleX; ex < ObstacleX + 1 + ObstacleSizeX; ex++) {
+// 		for (ey = ObstacleY; ey < ObstacleY + 1 + ObstacleSizeY; ey++) {
+// 			if (ex <= PlayerX + PlayerSizeX && ex >= PlayerX) {
+// 				if (ey <= PlayerY + PlayerSizeY && ey >= PlayerY) {
+// 					return true;
+// 				}
+// 			}
+// 		}
+// 	}
+// 	return false;
+// }
+
+function checkCollision(player, object) {
+	if (
+		player.x < object.x + object.width &&
+		player.x + player.width > object.x &&
+		player.y < object.y + object.height &&
+		player.y + player.height > object.y
+	) {
+		return true;
+	} else return false;
 }
 
 $('body').keydown(function(event) {
@@ -49,7 +60,7 @@ $('body').keydown(function(event) {
 	if (event.keyCode === 38) {
 		directions.up = true;
 	}
-	console.log(event.keyCode);
+	// console.log(event.keyCode);
 });
 
 $('body').keyup(function(event) {
@@ -63,22 +74,16 @@ $('body').keyup(function(event) {
 		directions.up = false;
 	}
 	//
-	console.log(event.keyCode);
+	// console.log(event.keyCode);
 });
 
 function render() {
 	canvas.clearCanvas();
 
 	if (directions.left) {
-		if(CheckCollision(player.x, player.y, player.width, player.height, obstacles[0].x, obstacles[0].y, obstacles[0].width, obstacles[0].height) == true){
-			player.vx = speed;
-		}
 		player.vx > -1 * speed ? (player.vx -= speedIncrement) : (player.vx = -1 * speed);
 	}
 	if (directions.right) {
-		if(CheckCollision(player.x, player.y, player.width, player.height, obstacles[0].x, obstacles[0].y, obstacles[0].width, obstacles[0].height) == true){
-			player.vx = -1 * speed;
-		}
 		player.vx < speed ? (player.vx += speedIncrement) : (player.vx = speed);
 	}
 	if (onGround && directions.up) player.vy = -1 * jumpSpeed;
@@ -86,8 +91,41 @@ function render() {
 	player.vy += gravity;
 	player.x += player.vx;
 	player.y += player.vy;
+	console.log(player.y + ' ' + player.vy);
 
 	onGround = false;
+
+	for (var i = 0; i < obstacles.length; i++) {
+		// if (player.vx < 0) {
+		// 	if (
+		// 		CheckCollision(
+		// 			player.x,
+		// 			player.y,
+		// 			player.width,
+		// 			player.height,
+		// 			obstacles[i].x,
+		// 			obstacles[i].y,
+		// 			obstacles[i].width,
+		// 			obstacles[i].height
+		// 		) == true
+		// 	) {
+		// 		player.vx = 0;
+		// 		player.x = obstacles[i].x + obstacles[i].width / 2 + player.width / 2;
+		// 	}
+		// }
+		if (player.vx < 0) {
+			if (checkCollision(player, obstacles[i]) == true) {
+				player.vx = 0;
+				player.x = obstacles[i].x + obstacles[i].width / 2 + player.width / 2;
+			}
+		}
+		if (player.vx > 0) {
+			if (checkCollision(player, obstacles[i]) == true) {
+				player.vx = 0;
+				player.x = obstacles[i].x - obstacles[i].width / 2 - player.width / 2;
+			}
+		}
+	}
 
 	if (player.y > canvasBounds.bottom - player.height / 2) {
 		player.y = canvasBounds.bottom - player.height / 2;
@@ -116,7 +154,7 @@ function render() {
 	if (player.vx > (-10 ^ -4) && player.vx < 0) {
 		player.vx = 0;
 	}
-	
+
 	canvas.drawRect({
 		fillStyle: '#000',
 		x: player.x,
@@ -134,9 +172,6 @@ function render() {
 			width: obstacle.width,
 			height: obstacle.height
 		});
-
-		if (CheckCollision(player.x, player.y, player.width, player.height, 9, 9, 5, 4)) {
-		}
 	}
 }
 
