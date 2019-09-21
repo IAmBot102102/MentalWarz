@@ -80,32 +80,45 @@ $('body').keyup(function(event) {
 function render() {
 	canvas.clearCanvas();
 
-<<<<<<< HEAD
-  for (var i = 0; i < obstacles.length; i++) {
-
-	if (player.vx < 0) {
-		if(CheckCollision(player.x, player.y, player.width, player.height, obstacles[i].x, obstacles[i].y, obstacles[i].width, obstacles[i].height) == true){
-			player.vx = 0;
-      player.x = obstacles[i].x - obstacles[i]/2 - player.width/2;
+	for (var i = 0; i < obstacles.length; i++) {
+		if (player.vx < 0) {
+			if (
+				CheckCollision(
+					player.x,
+					player.y,
+					player.width,
+					player.height,
+					obstacles[i].x,
+					obstacles[i].y,
+					obstacles[i].width,
+					obstacles[i].height
+				) == true
+			) {
+				player.vx = 0;
+				player.x = obstacles[i].x - obstacles[i] / 2 - player.width / 2;
+			}
+		}
+		if (player.vx > 0) {
+			if (
+				CheckCollision(
+					player.x,
+					player.y,
+					player.width,
+					player.height,
+					obstacles[i].x,
+					obstacles[i].y,
+					obstacles[i].width,
+					obstacles[i].height
+				) == true
+			) {
+				player.vx = 0;
+				player.x = obstacles[i].x - obstacles[i] / 2 - player.width / 2;
+			}
 		}
 	}
-	if (player.vx > 0) {
-		if(CheckCollision(player.x, player.y, player.width, player.height, obstacles[i].x, obstacles[i].y, obstacles[i].width, obstacles[i].height) == true){
-			player.vx = 0;
-      player.x = obstacles[i].x - obstacles[i]/2 - player.width/2;
-		}
-  }
-=======
-	if (directions.left) {
-		player.vx > -1 * speed ? (player.vx -= speedIncrement) : (player.vx = -1 * speed);
-	}
-	if (directions.right) {
-		player.vx < speed ? (player.vx += speedIncrement) : (player.vx = speed);
->>>>>>> e653922d27d6919b364c34a630f6c4b5141aceaa
-	}
 
-  player.vx > -1 * speed ? (player.vx -= speedIncrement) : (player.vx = -1 * speed);
-  player.vx < speed ? (player.vx += speedIncrement) : (player.vx = speed);
+	player.vx > -1 * speed ? (player.vx -= speedIncrement) : (player.vx = -1 * speed);
+	player.vx < speed ? (player.vx += speedIncrement) : (player.vx = speed);
 	if (onGround && directions.up) player.vy = -1 * jumpSpeed;
 
 	player.vy += gravity;
@@ -115,45 +128,8 @@ function render() {
 
 	onGround = false;
 
-<<<<<<< HEAD
 	if (player.y > canvasBounds.bottom - player.height / 2 || player.y) {
 		player.y = canvasBounds.bottom - player.height / 2;
-=======
-	for (var i = 0; i < obstacles.length; i++) {
-		// if (player.vx < 0) {
-		// 	if (
-		// 		CheckCollision(
-		// 			player.x,
-		// 			player.y,
-		// 			player.width,
-		// 			player.height,
-		// 			obstacles[i].x,
-		// 			obstacles[i].y,
-		// 			obstacles[i].width,
-		// 			obstacles[i].height
-		// 		) == true
-		// 	) {
-		// 		player.vx = 0;
-		// 		player.x = obstacles[i].x + obstacles[i].width / 2 + player.width / 2;
-		// 	}
-		// }
-		if (player.vx < 0) {
-			if (checkCollision(player, obstacles[i]) == true) {
-				player.vx = 0;
-				player.x = obstacles[i].x + obstacles[i].width;
-			}
-		}
-		if (player.vx > 0) {
-			if (checkCollision(player, obstacles[i]) == true) {
-				player.vx = 0;
-				player.x = obstacles[i].x - player.width;
-			}
-		}
-	}
-
-	if (player.y > canvasBounds.bottom - player.height) {
-		player.y = canvasBounds.bottom - player.height;
->>>>>>> e653922d27d6919b364c34a630f6c4b5141aceaa
 		player.vy = 0;
 		onGround = true;
 	}
