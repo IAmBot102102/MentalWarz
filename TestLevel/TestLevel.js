@@ -4,11 +4,11 @@ let canvas = $('#gameScreen');
 const canvasBounds = { bottom: 500, top: 0, left: 0, right: 750 };
 const player = { height: 30, width: 30, x: 40, y: 480, vx: 0, vy: 0 };
 let obstacles = [];
-const friction = 0.81;
+const friction = 0.75;
 const airfriction = 0.95;
 const gravity = 1.3;
 let directions = { left: false, right: false, up: false };
-const speed = 12;
+const speed = 11;
 const speedIncrement = 1.2;
 const jumpSpeed = 20;
 let onGround = true;
@@ -80,45 +80,12 @@ $('body').keyup(function(event) {
 function render() {
 	canvas.clearCanvas();
 
-	for (var i = 0; i < obstacles.length; i++) {
-		if (player.vx < 0) {
-			if (
-				CheckCollision(
-					player.x,
-					player.y,
-					player.width,
-					player.height,
-					obstacles[i].x,
-					obstacles[i].y,
-					obstacles[i].width,
-					obstacles[i].height
-				) == true
-			) {
-				player.vx = 0;
-				player.x = obstacles[i].x - obstacles[i] / 2 - player.width / 2;
-			}
-		}
-		if (player.vx > 0) {
-			if (
-				CheckCollision(
-					player.x,
-					player.y,
-					player.width,
-					player.height,
-					obstacles[i].x,
-					obstacles[i].y,
-					obstacles[i].width,
-					obstacles[i].height
-				) == true
-			) {
-				player.vx = 0;
-				player.x = obstacles[i].x - obstacles[i] / 2 - player.width / 2;
-			}
-		}
+	if (directions.left) {
+		player.vx > -1 * speed ? (player.vx -= speedIncrement) : (player.vx = -1 * speed);
 	}
-
-	player.vx > -1 * speed ? (player.vx -= speedIncrement) : (player.vx = -1 * speed);
-	player.vx < speed ? (player.vx += speedIncrement) : (player.vx = speed);
+	if (directions.right) {
+		player.vx < speed ? (player.vx += speedIncrement) : (player.vx = speed);
+	}
 	if (onGround && directions.up) player.vy = -1 * jumpSpeed;
 
 	player.vy += gravity;
@@ -128,8 +95,39 @@ function render() {
 
 	onGround = false;
 
-	if (player.y > canvasBounds.bottom - player.height / 2 || player.y) {
-		player.y = canvasBounds.bottom - player.height / 2;
+	for (var i = 0; i < obstacles.length; i++) {
+		// if (player.vx < 0) {
+		// 	if (
+		// 		CheckCollision(
+		// 			player.x,
+		// 			player.y,
+		// 			player.width,
+		// 			player.height,
+		// 			obstacles[i].x,
+		// 			obstacles[i].y,
+		// 			obstacles[i].width,
+		// 			obstacles[i].height
+		// 		) == true
+		// 	) {
+		// 		player.vx = 0;
+		// 		player.x = obstacles[i].x + obstacles[i].width / 2 + player.width / 2;
+		// 	}
+		// }
+		if (player.vy > 0 && checkCollision(player, obstacles[i]) == true && player.y - obstacles[i].y < player.vy) {
+			player.vy = 0;
+			player.y = obstacles[i].y - player.height;
+			onGround = true;
+		} else if (player.vx < 0 && checkCollision(player, obstacles[i]) == true) {
+			player.vx = 0;
+			player.x = obstacles[i].x + obstacles[i].width;
+		} else if (player.vx > 0 && checkCollision(player, obstacles[i]) == true) {
+			player.vx = 0;
+			player.x = obstacles[i].x - player.width;
+		}
+	}
+
+	if (player.y > canvasBounds.bottom - player.height) {
+		player.y = canvasBounds.bottom - player.height;
 		player.vy = 0;
 		onGround = true;
 	}
@@ -141,8 +139,8 @@ function render() {
 		player.x = canvasBounds.right - player.height;
 		player.vx = 0;
 	}
-	if (player.x < canvasBounds.left + player.height) {
-		player.x = canvasBounds.left + player.height;
+	if (player.x < canvasBounds.left) {
+		player.x = canvasBounds.left;
 		player.vx = 0;
 	}
 
@@ -157,7 +155,7 @@ function render() {
 	}
 
 	canvas.drawRect({
-		fillStyle: '#000',
+		fillStyle: '#FCAC4B',
 		x: player.x,
 		y: player.y,
 		width: player.width,
@@ -178,6 +176,7 @@ function render() {
 	}
 }
 
-createObstacle(200, 40, 400, 400, '#000');
+createObstacle(100, 70, 400, 400, '#000');
+createObstacle(200, 150, 600, 300, '#000');
 
 var interval = setInterval(render, 16.66);
