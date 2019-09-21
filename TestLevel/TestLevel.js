@@ -116,32 +116,32 @@ function render() {
 		if (player.vx < 0) {
 			if (checkCollision(player, obstacles[i]) == true) {
 				player.vx = 0;
-				player.x = obstacles[i].x + obstacles[i].width / 2 + player.width / 2;
+				player.x = obstacles[i].x + obstacles[i].width;
 			}
 		}
 		if (player.vx > 0) {
 			if (checkCollision(player, obstacles[i]) == true) {
 				player.vx = 0;
-				player.x = obstacles[i].x - obstacles[i].width / 2 - player.width / 2;
+				player.x = obstacles[i].x - player.width;
 			}
 		}
 	}
 
-	if (player.y > canvasBounds.bottom - player.height / 2) {
-		player.y = canvasBounds.bottom - player.height / 2;
+	if (player.y > canvasBounds.bottom - player.height) {
+		player.y = canvasBounds.bottom - player.height;
 		player.vy = 0;
 		onGround = true;
 	}
-	if (player.y < canvasBounds.top + player.height / 2) {
-		player.y = canvasBounds.top + player.height / 2;
+	if (player.y < canvasBounds.top + player.height) {
+		player.y = canvasBounds.top + player.height;
 		player.vy = 0;
 	}
-	if (player.x > canvasBounds.right - player.height / 2) {
-		player.x = canvasBounds.right - player.height / 2;
+	if (player.x > canvasBounds.right - player.height) {
+		player.x = canvasBounds.right - player.height;
 		player.vx = 0;
 	}
-	if (player.x < canvasBounds.left + player.height / 2) {
-		player.x = canvasBounds.left + player.height / 2;
+	if (player.x < canvasBounds.left + player.height) {
+		player.x = canvasBounds.left + player.height;
 		player.vx = 0;
 	}
 
@@ -160,7 +160,8 @@ function render() {
 		x: player.x,
 		y: player.y,
 		width: player.width,
-		height: player.height
+		height: player.height,
+		fromCenter: false
 	});
 
 	for (let i = 0; i < obstacles.length; i++) {
@@ -170,7 +171,8 @@ function render() {
 			x: obstacle.x,
 			y: obstacle.y,
 			width: obstacle.width,
-			height: obstacle.height
+			height: obstacle.height,
+			fromCenter: false
 		});
 	}
 }
