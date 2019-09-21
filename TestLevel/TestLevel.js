@@ -5,6 +5,8 @@ const canvasBounds = { bottom: 500, top: 0, left: 0, right: 750 };
 let player = { height: 30, width: 30, x: 40, y: 480, vx: 0, vy: 0 };
 let _player = { height: 30, width: 30, x: 40, y: 480, vx: 0, vy: 0 };
 let obstacles = [];
+let backgroundObs = [];
+let foregroundObs = [];
 const friction = 0.75;
 const airfriction = 0.95;
 const gravity = 1.3;
@@ -14,8 +16,15 @@ const speedIncrement = 1.2;
 const jumpSpeed = 20;
 let onGround = true;
 
-function createObstacle(height, width, x, y, color, reset) {
+function createObstacle({ height = 40, width = 40, x = 0, y = 0, color = '#000', reset = undefined } = {}) {
 	obstacles.push({ height: height, width: width, x: x, y: y, color: color, reset: reset });
+}
+
+function createBackObject({ height = 40, width = 40, x = 0, y = 0, color = '#000' } = {}) {
+	backgroundObs.push({ height: height, width: width, x: x, y: y, color: color });
+}
+function createForeObject({ height = 40, width = 40, x = 0, y = 0, color = '#000' } = {}) {
+	foregroundObs.push({ height: height, width: width, x: x, y: y, color: color });
 }
 
 function checkCollision(player, object) {
@@ -132,6 +141,18 @@ function render() {
 		player.vx = 0;
 	}
 
+	for (let i = 0; i < backgroundObs.length; i++) {
+		const bObject = backgroundObs[i];
+		canvas.drawRect({
+			fillStyle: bObject.color,
+			x: bObject.x,
+			y: bObject.y,
+			width: bObject.width,
+			height: bObject.height,
+			fromCenter: false
+		});
+	}
+
 	canvas.drawRect({
 		fillStyle: '#FCAC4B',
 		x: player.x,
@@ -153,14 +174,40 @@ function render() {
 		});
 	}
 
+	for (let i = 0; i < foregroundObs.length; i++) {
+		const fObject = foregroundObs[i];
+		canvas.drawRect({
+			fillStyle: fObject.color,
+			x: fObject.x,
+			y: fObject.y,
+			width: fObject.width,
+			height: fObject.height,
+			fromCenter: false
+		});
+	}
+
 	_player = Object.assign({}, player);
 }
 
-createObstacle(100, 70, 400, 400, '#000');
-createObstacle(200, 150, 600, 300, '#000');
-createObstacle(25, 100, 0, 375, '#000');
-createObstacle(25, 100, 175, 245, '#000');
-createObstacle(25, 100, 0, 115, '#000');
-createObstacle(25, 130, 470, 490, '#EF4747', { height: 30, width: 30, x: 40, y: 480, vx: 0, vy: 0 });
+// createObstacle(100, 70, 400, 400, '#000');
+createObstacle({ height: 100, width: 70, x: 400, y: 400, color: '#000' });
+// createObstacle(200, 150, 600, 300, '#000');
+createObstacle({ height: 200, width: 150, x: 600, y: 300, color: '#000' });
+// createObstacle(25, 100, 0, 375, '#000');
+createObstacle({ height: 25, width: 100, x: 0, y: 375, color: '#000' });
+// createObstacle(25, 100, 175, 245, '#000');
+createObstacle({ height: 25, width: 100, x: 175, y: 245, color: '#000' });
+// createObstacle(25, 100, 0, 115, '#000');
+createObstacle({ height: 25, width: 100, x: 0, y: 115, color: '#000' });
+// createObstacle(25, 130, 470, 490, '#EF4747', { height: 30, width: 30, x: 40, y: 480, vx: 0, vy: 0 });
+createObstacle({
+	height: 25,
+	width: 130,
+	x: 470,
+	y: 490,
+	color: '#EF4747',
+	reset: { height: 30, width: 30, x: 40, y: 480, vx: 0, vy: 0 }
+});
+createBackObject();
 
 var interval = setInterval(render, 16.66);
