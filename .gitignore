@@ -131,6 +131,9 @@ public/
 !.vscode/launch.json
 !.vscode/extensions.json
 
+# Webstorm
+.idea/*
+
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
 .history
